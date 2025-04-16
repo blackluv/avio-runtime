@@ -1,0 +1,26 @@
+{
+  "canisters": {
+    "avio-runtime-backend": {
+      "candid": "src/avio-runtime-backend/avio-runtime-backend.did",
+      "package": "avio-runtime-backend",
+      "type": "rust"
+    },
+    "avio-runtime-frontend": {
+      "dependencies": [
+        "avio-runtime-backend"
+      ],
+      "source": [
+        "src/avio-runtime-frontend/assets"
+      ],
+      "type": "assets"
+    }
+  },
+  "defaults": {
+    "build": {
+      "args": "",
+      "packtool": ""
+    }
+  },
+  "output_env_file": ".env",
+  "version": 1
+}
