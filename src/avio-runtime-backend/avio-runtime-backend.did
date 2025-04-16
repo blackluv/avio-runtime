@@ -1,3 +1,9 @@
 service : {
-    "greet": (text) -> (text) query;
+  deploy_smart_contract: (text, text) -> (text);
+  execute_smart_contract: (text, text, text, nat64, vec nat8) -> (text);
+  deposit_doge: (text, nat64, vec nat8, vec nat8) -> (text);
+  withdraw_doge: (text, text, nat64, vec nat8) -> (text);
+  batch_withdraw_doge: (vec record { text; text; nat64; vec nat8 }) -> (vec text);
+  get_transaction_history: (text) -> (vec record { text; text; nat64 });
+  prune_old_transactions: () -> (text);
 }

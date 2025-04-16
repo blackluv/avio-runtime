@@ -1,0 +1,69 @@
+version: "3.8"
+
+services:
+  # Runtime Service
+  runtime:
+    build:
+      context: .
+      dockerfile: Dockerfile.runtime
+    ports:
+      - "8080:8080" # Expose the runtime API
+    depends_on:
+      - mongodb
+      - dogecoin
+    environment:
+      - MONGODB_URI=mongodb://mongodb:27017
+      - DOGECOIN_NODE_URL=http://dogecoin:18332
+      - RUNTIME_ADDRESS=0xRuntimeAddress
+    networks:
+      - runtime-network
+
+  # MongoDB Service
+  mongodb:
+    image: mongo:6.0
+    ports:
+      - "27017:27017" # Expose MongoDB
+    volumes:
+      - mongodb_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=password
+    networks:
+      - runtime-network
+
+  # Dogecoin Core Service
+  dogecoin:
+    image: langerhans/dogecoin-core:1.14.5
+    ports:
+      - "18332:18332" # Expose Dogecoin RPC
+    volumes:
+      - dogecoin_data:/root/.dogecoin
+    environment:
+      - RPCUSER=dogecoin
+      - RPCPASSWORD=password
+      - RPCALLOWIP=0.0.0.0/0
+      - RPCPORT=18332
+    networks:
+      - runtime-network
+
+  # Optional: Dogecoin Explorer (for testing)
+  dogecoin-explorer:
+    image: langerhans/dogecoin-explorer:latest
+    ports:
+      - "3000:3000" # Expose Dogecoin Explorer
+    environment:
+      - DOGECOIN_NODE_URL=http://dogecoin:18332
+    depends_on:
+      - dogecoin
+    networks:
+      - runtime-network
+
+# Volumes for persistent data
+volumes:
+  mongodb_data:
+  dogecoin_data:
+
+# Network for all services
+networks:
+  runtime-network:
+    driver: bridge

@@ -1,0 +1,29 @@
+# Use the official Rust image as the base
+FROM rust:1.65 AS builder
+
+# Set the working directory
+WORKDIR /app
+
+# Copy the source code
+COPY . .
+
+# Build the runtime
+RUN cargo build --release
+
+# Use a smaller base image for the final runtime
+FROM debian:bullseye-slim
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    libssl-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy the built binary
+COPY --from=builder /app/target/release/avio-runtime-backend /usr/local/bin/avio-runtime-backend
+
+# Expose the runtime API port
+EXPOSE 8080
+
+# Run the runtime
+CMD ["avio-runtime-backend"]

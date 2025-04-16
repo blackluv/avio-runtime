@@ -1,0 +1,15 @@
+{
+    "canisters": {
+      "runtime_canister": {
+        "type": "rust",
+        "package": "avio-runtime-backend",
+        "candid": "src/avio-runtime-backend.did"
+      }
+    },
+    "defaults": {
+      "build": {
+        "packtool": ""
+      }
+    },
+    "version": 1
+  }
